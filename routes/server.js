@@ -1,17 +1,25 @@
 const express = require("express");
 const cors = require("cors");
 const { DateTime } = require("luxon");
-const api_key = "cnbqahhr01qlfrvk62rgcnbqahhr01qlfrvk62s0";
-const polygon_api_key = "cgTlU7hQztPpm7FlQpaByuGWip0h820j";
 const { MongoClient } = require("mongodb");
 const app = express();
+
+// Import dotenv
+const dotenv = require('dotenv');
+
+// Load .env file from the root directory
+dotenv.config({ path: './.env' });
+
+const API_KEY = process.env.API_KEY;
+const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
+const CONNECTION_STRING = process.env.CONNECTION_STRING;
+const DATABASE_NAME = process.env.DATABASE_NAME;
 
 app.set('trust proxy', true);
 app.use(cors());
 app.use(express.json());
 
-const CONNECTION_STRING = "mongodb+srv://mkurakul:Hello123@cluster0.nfuuism.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const DATABASE_NAME = "WebTechnologies";
+
 let database;
 
 MongoClient.connect(CONNECTION_STRING, (error, client) => {
@@ -257,7 +265,7 @@ app.get("/company", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${searchQuery}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${searchQuery}&token=${API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -272,7 +280,7 @@ app.get("/quote", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${searchQuery}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${searchQuery}&token=${API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -288,7 +296,7 @@ app.get("/topNews", async (req, res) => {
   try {
     const todayDate = DateTime.now().toISODate();
     const previousDate = DateTime.now().minus({ days: 30 }).toISODate();
-    const response = await fetch(`https://finnhub.io/api/v1/company-news?symbol=${searchQuery}&from=${previousDate}&to=${todayDate}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/company-news?symbol=${searchQuery}&from=${previousDate}&to=${todayDate}&token=${API_KEY}`);
     const data = await response.json();
 
     const filteredNews = data.filter(article => (
@@ -313,7 +321,7 @@ app.get("/peers", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://finnhub.io/api/v1/stock/peers?symbol=${searchQuery}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/stock/peers?symbol=${searchQuery}&token=${API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -328,7 +336,7 @@ app.get("/autocomplete", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://finnhub.io/api/v1/search?q=${searchQuery}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/search?q=${searchQuery}&token=${API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -345,7 +353,7 @@ app.get("/insidersData", async (req, res) => {
   try {
     // const todayDate = DateTime.now().toISODate();
 
-    const response = await fetch(`https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${searchQuery}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${searchQuery}&token=${API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -360,7 +368,7 @@ app.get("/historicalEPSData", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://finnhub.io/api/v1/stock/earnings?symbol=${searchQuery}&token=${api_key}`)
+    const response = await fetch(`https://finnhub.io/api/v1/stock/earnings?symbol=${searchQuery}&token=${API_KEY}`)
     const data = await response.json();
 
     res.json(data);
@@ -375,7 +383,7 @@ app.get("/recommendationTrendsData", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${searchQuery}&token=${api_key}`);
+    const response = await fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${searchQuery}&token=${API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -394,7 +402,7 @@ app.get("/chartsData", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://api.polygon.io/v2/aggs/ticker/${searchQuery}/range/1/day/${previousDate}/${todayDate}?adjusted=true&sort=asc&apiKey=${polygon_api_key}`);
+    const response = await fetch(`https://api.polygon.io/v2/aggs/ticker/${searchQuery}/range/1/day/${previousDate}/${todayDate}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`);
     const data = await response.json();
 
     res.json(data);
@@ -428,7 +436,7 @@ app.get("/dayChartsData", async (req, res) => {
 
   try {
 
-    const response = await fetch(`https://api.polygon.io/v2/aggs/ticker/${searchQuery}/range/1/hour/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${polygon_api_key}`);
+    const response = await fetch(`https://api.polygon.io/v2/aggs/ticker/${searchQuery}/range/1/hour/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`);
     const data = await response.json();
 
     res.json(data);
