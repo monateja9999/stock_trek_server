@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { DateTime } = require("luxon");
+const api_key = "cnbqahhr01qlfrvk62rgcnbqahhr01qlfrvk62s0";
+const polygon_api_key = "cgTlU7hQztPpm7FlQpaByuGWip0h820j";
 const { MongoClient } = require("mongodb");
 const app = express();
 
@@ -8,6 +10,8 @@ app.set('trust proxy', true);
 app.use(cors());
 app.use(express.json());
 
+const CONNECTION_STRING = "mongodb+srv://mkurakul:Hello123@cluster0.nfuuism.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DATABASE_NAME = "WebTechnologies";
 let database;
 
 MongoClient.connect(CONNECTION_STRING, (error, client) => {
